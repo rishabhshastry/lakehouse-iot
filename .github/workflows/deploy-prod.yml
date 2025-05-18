@@ -1,0 +1,50 @@
+name: Deploy to Production Environment
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**.md'
+      - '.github/workflows/deploy-dev.yml'
+      - '.github/workflows/deploy-test.yml'
+
+jobs:
+  deploy-prod:
+    runs-on: ubuntu-latest
+    environment: 
+      name: prod
+      url: ${{ secrets.DATABRICKS_HOST }}  # Optional: Links to your Databricks workspace
+    
+    # Requires manual approval before deployment
+    concurrency: 
+      group: prod_environment
+      cancel-in-progress: false
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install Databricks CLI
+      run: |
+        curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
+        databricks version
+
+    - name: Configure Databricks CLI
+      env:
+        DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+        DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+      run: |
+        databricks configure --token
+
+    - name: Deploy Bundle
+      env:
+        DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+        DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+      run: |
+        databricks bundle deploy --target prod 
