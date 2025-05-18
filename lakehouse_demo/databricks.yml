@@ -1,0 +1,29 @@
+# This is a Databricks asset bundle definition for lakehouse_demo.
+# See https://docs.databricks.com/dev-tools/bundles/index.html for documentation.
+bundle:
+  name: lakehouse_demo
+  uuid: 82d89055-2543-4b50-ab71-9cf77d92999e
+
+include:
+  - resources/*.yml
+
+targets:
+  dev:
+    # The default target uses 'mode: development' to create a development copy.
+    # - Deployed resources get prefixed with '[dev my_user_name]'
+    # - Any job schedules and triggers are paused by default.
+    # See also https://docs.databricks.com/dev-tools/bundles/deployment-modes.html.
+    mode: development
+    default: true
+    workspace:
+      host: https://e2-demo-field-eng.cloud.databricks.com
+
+  prod:
+    mode: production
+    workspace:
+      host: https://e2-demo-field-eng.cloud.databricks.com
+      # We explicitly deploy to /Workspace/Users/rishabh.shastry@databricks.com to make sure we only have a single copy.
+      root_path: /Workspace/Users/rishabh.shastry@databricks.com/.bundle/${bundle.name}/${bundle.target}
+    permissions:
+      - user_name: rishabh.shastry@databricks.com
+        level: CAN_MANAGE
