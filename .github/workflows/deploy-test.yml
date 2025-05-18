@@ -41,7 +41,7 @@ jobs:
         DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
         DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
       run: |
-        databricks bundle validate --target test --profile e2-demo-field-eng
+        databricks bundle validate --target test
 
     - name: Deploy Bundle
       working-directory: ./lakehouse_demo
@@ -49,4 +49,4 @@ jobs:
         DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
         DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
       run: |
-        databricks bundle deploy --target test --profile e2-demo-field-eng
+        databricks bundle deploy --target test
