@@ -33,11 +33,11 @@ jobs:
         DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
         DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
       run: |
-        databricks configure --token
+        databricks configure --host "$DATABRICKS_HOST" --token "$DATABRICKS_TOKEN"
 
     - name: Deploy Bundle
       env:
         DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
         DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
       run: |
-        databricks bundle deploy --target dev 
+        databricks bundle deploy --target dev --profile e2-demo-field-eng
