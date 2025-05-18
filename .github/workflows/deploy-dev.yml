@@ -35,7 +35,16 @@ jobs:
       run: |
         databricks configure --host "$DATABRICKS_HOST" --token "$DATABRICKS_TOKEN"
 
+    - name: Validate Bundle
+      working-directory: ./lakehouse_demo
+      env:
+        DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+        DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+      run: |
+        databricks bundle validate --target dev --profile e2-demo-field-eng
+
     - name: Deploy Bundle
+      working-directory: ./lakehouse_demo
       env:
         DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
         DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
