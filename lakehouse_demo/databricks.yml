@@ -16,14 +16,53 @@ targets:
     mode: development
     default: true
     workspace:
-      host: https://e2-demo-field-eng.cloud.databricks.com
+      host: ${DATABRICKS_HOST}
+    variables:
+      INSTANCE_POOL_ID: "0727-104344-hauls13-pool-uftxk0r6"
+      DLT_PIPELINE_ID: "e6653220-a089-4b36-9474-c84a5328706d"
+
+  test:
+    mode: staging
+    workspace:
+      host: ${DATABRICKS_HOST}
+      root_path: /Workspace/Users/rishabh.shastry@databricks.com/.bundle/${bundle.name}/test
+    permissions:
+      - user_name: rishabh.shastry@databricks.com
+        level: CAN_MANAGE
+    variables:
+      INSTANCE_POOL_ID: "0727-104344-hauls13-pool-uftxk0r6"  # You might want different pools per env
+      DLT_PIPELINE_ID: ""  # Add test pipeline ID here
 
   prod:
     mode: production
     workspace:
-      host: https://e2-demo-field-eng.cloud.databricks.com
+      host: ${DATABRICKS_HOST}
       # We explicitly deploy to /Workspace/Users/rishabh.shastry@databricks.com to make sure we only have a single copy.
       root_path: /Workspace/Users/rishabh.shastry@databricks.com/.bundle/${bundle.name}/${bundle.target}
     permissions:
       - user_name: rishabh.shastry@databricks.com
         level: CAN_MANAGE
+    variables:
+      INSTANCE_POOL_ID: "0727-104344-hauls13-pool-uftxk0r6"  # You might want different pools per env
+      DLT_PIPELINE_ID: ""  # Add prod pipeline ID here
+
+# First define the environment-specific secret scopes
+environments:
+  dev:
+    variables:
+      SECRETS_SCOPE: "lakehouse_iot_dev_scope"
+  test:
+    variables:
+      SECRETS_SCOPE: "lakehouse_iot_test_scope"
+  prod:
+    variables:
+      SECRETS_SCOPE: "lakehouse_iot_prod_scope"
+
+# Define variables that reference secrets using the environment-specific scope
+variables:
+  # These will be resolved from the environment-specific secret scope
+  # ${var.SECRETS_SCOPE} will be replaced with the appropriate scope name based on the environment
+  API_KEY: "{{secrets/${var.SECRETS_SCOPE}/api_key}}"
+  DB_PASSWORD: "{{secrets/${var.SECRETS_SCOPE}/db_password}}"
+  SNOWFLAKE_USER: "{{secrets/${var.SECRETS_SCOPE}/snowflake_user}}"
+  SNOWFLAKE_PASSWORD: "{{secrets/${var.SECRETS_SCOPE}/snowflake_password}}"
