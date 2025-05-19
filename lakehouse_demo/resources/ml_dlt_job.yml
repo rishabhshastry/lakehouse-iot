@@ -3,32 +3,52 @@ resources:
     iot_turbine_ml_pipeline:
       name: "[${bundle.target}] IoT Turbine ML Pipeline"
       max_concurrent_runs: 4
+      git_source:
+        git_url: "https://github.com/rishabhshastry/lakehouse-iot.git"
+        git_provider: "github"
+        git_branch: "${bundle.target == 'prod' ? 'main' : bundle.target}"
       tasks:
         - task_key: create_feature_and_automl_run
           depends_on:
             - task_key: start_dlt_pipeline
           notebook_task:
-            notebook_path: /04-Data-Science-ML/04.1-automl-iot-turbine-predictive-maintenance
+            notebook_path: /04-Data-Science-ML/04.1-automl-iot-turbine-predictive-maintenance.ipynb
             source: GIT
+            git_source:
+              git_url: "https://github.com/rishabhshastry/lakehouse-iot.git"
+              git_provider: "github"
+              git_branch: "${bundle.target == 'prod' ? 'main' : bundle.target}"
           job_cluster_key: Shared_job_cluster
         - task_key: deploy_best_model
           depends_on:
             - task_key: create_feature_and_automl_run
           notebook_task:
-            notebook_path: /04-Data-Science-ML/04.2-automl-generated-notebook-iot-turbine
+            notebook_path: /04-Data-Science-ML/04.2-automl-generated-notebook-iot-turbine.ipynb
             source: GIT
+            git_source:
+              git_url: "https://github.com/rishabhshastry/lakehouse-iot.git"
+              git_provider: "github"
+              git_branch: "${bundle.target == 'prod' ? 'main' : bundle.target}"
           job_cluster_key: Shared_job_cluster
         - task_key: deploy_endpoint
           depends_on:
             - task_key: deploy_best_model
           notebook_task:
-            notebook_path: /04-Data-Science-ML/04.3-running-inference-iot-turbine
+            notebook_path: /04-Data-Science-ML/04.3-running-inference-iot-turbine.ipynb
             source: GIT
+            git_source:
+              git_url: "https://github.com/rishabhshastry/lakehouse-iot.git"
+              git_provider: "github"
+              git_branch: "${bundle.target == 'prod' ? 'main' : bundle.target}"
           job_cluster_key: Shared_job_cluster
         - task_key: init_data
           notebook_task:
-            notebook_path: /_resources/01-load-data
+            notebook_path: /_resources/01-load-data.ipynb
             source: GIT
+            git_source:
+              git_url: "https://github.com/rishabhshastry/lakehouse-iot.git"
+              git_provider: "github"
+              git_branch: "${bundle.target == 'prod' ? 'main' : bundle.target}"
           job_cluster_key: Shared_job_cluster
         - task_key: start_dlt_pipeline
           depends_on:
