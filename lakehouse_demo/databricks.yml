@@ -20,7 +20,7 @@ targets:
     mode: development
     default: true
     workspace:
-      host: ${DATABRICKS_HOST}
+      # Host will be provided by DATABRICKS_HOST environment variable
     variables:
       INSTANCE_POOL_ID: "0727-104344-hauls13-pool-uftxk0r6"
       DLT_PIPELINE_ID: "e6653220-a089-4b36-9474-c84a5328706d"
@@ -32,7 +32,7 @@ targets:
   test:
     mode: staging
     workspace:
-      host: ${DATABRICKS_HOST}
+      # Host will be provided by DATABRICKS_HOST environment variable
       root_path: /Workspace/Users/rishabh.shastry@databricks.com/.bundle/${bundle.name}/test
     permissions:
       - user_name: rishabh.shastry@databricks.com
@@ -48,8 +48,7 @@ targets:
   prod:
     mode: production
     workspace:
-      host: ${DATABRICKS_HOST}
-      # We explicitly deploy to /Workspace/Users/rishabh.shastry@databricks.com to make sure we only have a single copy.
+      # Host will be provided by DATABRICKS_HOST environment variable
       root_path: /Workspace/Users/rishabh.shastry@databricks.com/.bundle/${bundle.name}/${bundle.target}
     permissions:
       - user_name: rishabh.shastry@databricks.com
