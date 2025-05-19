@@ -7,6 +7,15 @@ bundle:
 include:
   - resources/*.yml
 
+# Define variables at the root level
+variables:
+  INSTANCE_POOL_ID: ""
+  DLT_PIPELINE_ID: ""
+  #API_KEY: ""
+  #DB_PASSWORD: ""
+  #SNOWFLAKE_USER: ""
+  #SNOWFLAKE_PASSWORD: ""
+
 targets:
   dev:
     # The default target uses 'mode: development' to create a development copy.
@@ -17,11 +26,10 @@ targets:
     default: true
     workspace:
       host: ${DATABRICKS_HOST}
+    # Override variables for dev environment
     variables:
       INSTANCE_POOL_ID: "0727-104344-hauls13-pool-uftxk0r6"
       DLT_PIPELINE_ID: "e6653220-a089-4b36-9474-c84a5328706d"
-      #SECRETS_SCOPE: "lakehouse_iot_dev_scope"
-      # These will be resolved from the dev secret scope
       #API_KEY: "{{secrets/lakehouse_iot_dev_scope/api_key}}"
       #DB_PASSWORD: "{{secrets/lakehouse_iot_dev_scope/db_password}}"
       #SNOWFLAKE_USER: "{{secrets/lakehouse_iot_dev_scope/snowflake_user}}"
@@ -35,11 +43,10 @@ targets:
     permissions:
       - user_name: rishabh.shastry@databricks.com
         level: CAN_MANAGE
+    # Override variables for test environment
     variables:
-      INSTANCE_POOL_ID: "0727-104344-hauls13-pool-uftxk0r6"  # You might want different pools per env
+      INSTANCE_POOL_ID: "0727-104344-hauls13-pool-uftxk0r6"
       DLT_PIPELINE_ID: ""  # Add test pipeline ID here
-      #SECRETS_SCOPE: "lakehouse_iot_test_scope"
-      # These will be resolved from the test secret scope
       #API_KEY: "{{secrets/lakehouse_iot_test_scope/api_key}}"
       #DB_PASSWORD: "{{secrets/lakehouse_iot_test_scope/db_password}}"
       #SNOWFLAKE_USER: "{{secrets/lakehouse_iot_test_scope/snowflake_user}}"
@@ -54,11 +61,10 @@ targets:
     permissions:
       - user_name: rishabh.shastry@databricks.com
         level: CAN_MANAGE
+    # Override variables for prod environment
     variables:
-      INSTANCE_POOL_ID: "0727-104344-hauls13-pool-uftxk0r6"  # You might want different pools per env
+      INSTANCE_POOL_ID: "0727-104344-hauls13-pool-uftxk0r6"
       DLT_PIPELINE_ID: ""  # Add prod pipeline ID here
-      SECRETS_SCOPE: "lakehouse_iot_prod_scope"
-      # These will be resolved from the prod secret scope
       #API_KEY: "{{secrets/lakehouse_iot_prod_scope/api_key}}"
       #DB_PASSWORD: "{{secrets/lakehouse_iot_prod_scope/db_password}}"
       #SNOWFLAKE_USER: "{{secrets/lakehouse_iot_prod_scope/snowflake_user}}"
