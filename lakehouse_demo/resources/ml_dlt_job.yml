@@ -12,7 +12,7 @@ resources:
           depends_on:
             - task_key: start_dlt_pipeline
           notebook_task:
-            notebook_path: "/04-Data-Science-ML/04.1-automl-iot-turbine-predictive-maintenance.ipynb"
+            notebook_path: "04-Data-Science-ML/04.1-automl-iot-turbine-predictive-maintenance.ipynb"
             source: "GIT"
             git_source:
               git_url: "https://github.com/rishabhshastry/lakehouse-iot.git"
@@ -23,7 +23,7 @@ resources:
           depends_on:
             - task_key: create_feature_and_automl_run
           notebook_task:
-            notebook_path: "/04-Data-Science-ML/04.2-automl-generated-notebook-iot-turbine.ipynb"
+            notebook_path: "04-Data-Science-ML/04.2-automl-generated-notebook-iot-turbine.ipynb"
             source: "GIT"
             git_source:
               git_url: "https://github.com/rishabhshastry/lakehouse-iot.git"
@@ -34,7 +34,7 @@ resources:
           depends_on:
             - task_key: deploy_best_model
           notebook_task:
-            notebook_path: "/04-Data-Science-ML/04.3-running-inference-iot-turbine.ipynb"
+            notebook_path: "04-Data-Science-ML/04.3-running-inference-iot-turbine.ipynb"
             source: "GIT"
             git_source:
               git_url: "https://github.com/rishabhshastry/lakehouse-iot.git"
@@ -43,7 +43,7 @@ resources:
           job_cluster_key: Shared_job_cluster
         - task_key: init_data
           notebook_task:
-            notebook_path: "/_resources/01-load-data.ipynb"
+            notebook_path: "_resources/01-load-data.ipynb"
             source: "GIT"
             git_source:
               git_url: "https://github.com/rishabhshastry/lakehouse-iot.git"
