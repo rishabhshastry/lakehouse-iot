@@ -45,8 +45,8 @@ resources:
               spark.databricks.dataLineage.enabled: "true"
               spark.master: local[*, 4]
               # Add environment-specific configurations
-              spark.secret.api.key: ${var.API_KEY}
-              spark.secret.db.password: ${var.DB_PASSWORD}
+              #spark.secret.api.key: ${var.API_KEY}
+              #spark.secret.db.password: ${var.DB_PASSWORD}
             custom_tags:
               ResourceClass: SingleNode
               demo: lakehouse-iot-platform
