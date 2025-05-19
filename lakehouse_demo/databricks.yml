@@ -10,6 +10,7 @@ include:
 variables:
   INSTANCE_POOL_ID: null
   DLT_PIPELINE_ID: null
+  GIT_BRANCH: null
 
 targets:
   dev:
@@ -24,6 +25,7 @@ targets:
     variables:
       INSTANCE_POOL_ID: "0727-104344-hauls13-pool-uftxk0r6"
       DLT_PIPELINE_ID: "e6653220-a089-4b36-9474-c84a5328706d"
+      GIT_BRANCH: "dev"
       #API_KEY: "{{secrets/lakehouse_iot_dev_scope/api_key}}"
       #DB_PASSWORD: "{{secrets/lakehouse_iot_dev_scope/db_password}}"
       #SNOWFLAKE_USER: "{{secrets/lakehouse_iot_dev_scope/snowflake_user}}"
@@ -40,6 +42,7 @@ targets:
     variables:
       INSTANCE_POOL_ID: "0727-104344-hauls13-pool-uftxk0r6"
       DLT_PIPELINE_ID: ""  # Add test pipeline ID here
+      GIT_BRANCH: "test"
       #API_KEY: "{{secrets/lakehouse_iot_test_scope/api_key}}"
       #DB_PASSWORD: "{{secrets/lakehouse_iot_test_scope/db_password}}"
       #SNOWFLAKE_USER: "{{secrets/lakehouse_iot_test_scope/snowflake_user}}"
@@ -56,6 +59,7 @@ targets:
     variables:
       INSTANCE_POOL_ID: "0727-104344-hauls13-pool-uftxk0r6"
       DLT_PIPELINE_ID: ""  # Add prod pipeline ID here
+      GIT_BRANCH: "main"
       #API_KEY: "{{secrets/lakehouse_iot_prod_scope/api_key}}"
       #DB_PASSWORD: "{{secrets/lakehouse_iot_prod_scope/db_password}}"
       #SNOWFLAKE_USER: "{{secrets/lakehouse_iot_prod_scope/snowflake_user}}"
