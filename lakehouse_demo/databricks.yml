@@ -21,7 +21,7 @@ targets:
     mode: development
     default: true
     workspace:
-      host: https://e2-demo-field-eng.cloud.databricks.com
+      host: #enter url tied to your databricks workspace
     variables:
       INSTANCE_POOL_ID: "0727-104344-hauls13-pool-uftxk0r6"
       DLT_PIPELINE_ID: "e6653220-a089-4b36-9474-c84a5328706d"
@@ -34,10 +34,10 @@ targets:
   test:
     mode: staging
     workspace:
-      host: https://e2-demo-field-eng.cloud.databricks.com
-      root_path: /Workspace/Users/rishabh.shastry@databricks.com/.bundle/${bundle.name}/test
+      host: #enter url tied to your databricks workspace
+      root_path: /Workspace/Users/{username}/.bundle/${bundle.name}/test
     permissions:
-      - user_name: rishabh.shastry@databricks.com
+      - user_name: #add username here
         level: CAN_MANAGE
     variables:
       INSTANCE_POOL_ID: "0727-104344-hauls13-pool-uftxk0r6"
@@ -51,10 +51,10 @@ targets:
   prod:
     mode: production
     workspace:
-      host: https://e2-demo-field-eng.cloud.databricks.com
-      root_path: /Workspace/Users/rishabh.shastry@databricks.com/.bundle/${bundle.name}/${bundle.target}
+      host: #enter url tied to your databricks workspace
+      root_path: /Workspace/Users/{username}/.bundle/${bundle.name}/${bundle.target}
     permissions:
-      - user_name: rishabh.shastry@databricks.com
+      - user_name: #add username here
         level: CAN_MANAGE
     variables:
       INSTANCE_POOL_ID: "0727-104344-hauls13-pool-uftxk0r6"
