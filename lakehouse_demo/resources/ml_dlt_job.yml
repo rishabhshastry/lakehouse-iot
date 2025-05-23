@@ -1,0 +1,85 @@
+resources:
+  jobs:
+    iot_turbine_ml_pipeline:
+      name: "[${bundle.target}] IoT Turbine ML Pipeline"
+      max_concurrent_runs: 4
+      git_source:
+        git_url: "https://github.com/rishabhshastry/lakehouse-iot.git"
+        git_provider: "github"
+        git_branch: "${var.GIT_BRANCH}"
+      tasks:
+        - task_key: create_feature_and_automl_run
+          depends_on:
+            - task_key: start_dlt_pipeline
+          notebook_task:
+            notebook_path: "04-Data-Science-ML/04.1-automl-iot-turbine-predictive-maintenance.ipynb"
+            source: "GIT"
+            git_source:
+              git_url: "https://github.com/rishabhshastry/lakehouse-iot.git"
+              git_provider: "github"
+              git_branch: "${var.GIT_BRANCH}"
+          job_cluster_key: Shared_job_cluster
+        - task_key: deploy_best_model
+          depends_on:
+            - task_key: create_feature_and_automl_run
+          notebook_task:
+            notebook_path: "04-Data-Science-ML/04.2-automl-generated-notebook-iot-turbine.ipynb"
+            source: "GIT"
+            git_source:
+              git_url: "https://github.com/rishabhshastry/lakehouse-iot.git"
+              git_provider: "github"
+              git_branch: "${var.GIT_BRANCH}"
+          job_cluster_key: Shared_job_cluster
+        - task_key: deploy_endpoint
+          depends_on:
+            - task_key: deploy_best_model
+          notebook_task:
+            notebook_path: "04-Data-Science-ML/04.3-running-inference-iot-turbine.ipynb"
+            source: "GIT"
+            git_source:
+              git_url: "https://github.com/rishabhshastry/lakehouse-iot.git"
+              git_provider: "github"
+              git_branch: "${var.GIT_BRANCH}"
+          job_cluster_key: Shared_job_cluster
+        - task_key: init_data
+          notebook_task:
+            notebook_path: "_resources/01-load-data.ipynb"
+            source: "GIT"
+            git_source:
+              git_url: "https://github.com/rishabhshastry/lakehouse-iot.git"
+              git_provider: "github"
+              git_branch: "${var.GIT_BRANCH}"
+          job_cluster_key: Shared_job_cluster
+        - task_key: start_dlt_pipeline
+          depends_on:
+            - task_key: init_data
+          pipeline_task:
+            pipeline_id: ${var.DLT_PIPELINE_ID}
+            full_refresh: true
+      job_clusters:
+        - job_cluster_key: Shared_job_cluster
+          new_cluster:
+            spark_version: "15.4.x-cpu-ml-scala2.12"
+            spark_conf:
+              spark.databricks.cluster.profile: "singleNode"
+              spark.databricks.dataLineage.enabled: "true"
+              spark.master: "local[*, 4]"
+              # Add environment-specific configurations
+              #spark.secret.api.key: ${var.API_KEY}
+              #spark.secret.db.password: ${var.DB_PASSWORD}
+            custom_tags:
+              ResourceClass: "SingleNode"
+              demo: "lakehouse-iot-platform"
+              project: "dbdemos"
+              environment: "${bundle.target}"
+            spark_env_vars:
+              PYSPARK_PYTHON: "/databricks/python3/bin/python3"
+            instance_pool_id: ${var.INSTANCE_POOL_ID}
+            data_security_mode: "SINGLE_USER"
+            runtime_engine: "STANDARD"
+            num_workers: 0
+      tags:
+        environment: "${bundle.target}"
+      queue:
+        enabled: true
+      edit_mode: "UI_LOCKED"

@@ -1,0 +1,52 @@
+name: Deploy to Test Environment
+
+on:
+  push:
+    branches:
+      - test
+    paths-ignore:
+      - '**.md'
+      - '.github/workflows/deploy-prod.yml'
+      - '.github/workflows/deploy-dev.yml'
+
+jobs:
+  deploy-test:
+    runs-on: ubuntu-latest
+    environment: test
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install Databricks CLI
+      run: |
+        curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
+        databricks version
+
+    - name: Configure Databricks CLI
+      env:
+        DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+        DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+      run: |
+        databricks configure --host "$DATABRICKS_HOST" --token "$DATABRICKS_TOKEN"
+
+    - name: Validate Bundle
+      working-directory: ./lakehouse_demo
+      env:
+        DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+        DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+      run: |
+        databricks bundle validate --target test
+
+    - name: Deploy Bundle
+      working-directory: ./lakehouse_demo
+      env:
+        DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+        DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+      run: |
+        databricks bundle deploy --target test

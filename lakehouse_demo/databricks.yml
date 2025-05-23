@@ -1,0 +1,66 @@
+# This is a Databricks asset bundle definition for lakehouse_demo.
+# See https://docs.databricks.com/dev-tools/bundles/index.html for documentation.
+bundle:
+  name: lakehouse_demo
+  uuid: 82d89055-2543-4b50-ab71-9cf77d92999e
+
+include:
+  - resources/*.yml
+
+variables:
+  INSTANCE_POOL_ID: null
+  DLT_PIPELINE_ID: null
+  GIT_BRANCH: null
+
+targets:
+  dev:
+    # The default target uses 'mode: development' to create a development copy.
+    # - Deployed resources get prefixed with '[dev my_user_name]'
+    # - Any job schedules and triggers are paused by default.
+    # See also https://docs.databricks.com/dev-tools/bundles/deployment-modes.html.
+    mode: development
+    default: true
+    workspace:
+      host: #enter url tied to your databricks workspace
+    variables:
+      INSTANCE_POOL_ID: "0727-104344-hauls13-pool-uftxk0r6"
+      DLT_PIPELINE_ID: "e6653220-a089-4b36-9474-c84a5328706d"
+      GIT_BRANCH: "dev"
+      #API_KEY: "{{secrets/lakehouse_iot_dev_scope/api_key}}"
+      #DB_PASSWORD: "{{secrets/lakehouse_iot_dev_scope/db_password}}"
+      #SNOWFLAKE_USER: "{{secrets/lakehouse_iot_dev_scope/snowflake_user}}"
+      #SNOWFLAKE_PASSWORD: "{{secrets/lakehouse_iot_dev_scope/snowflake_password}}"
+
+  test:
+    mode: staging
+    workspace:
+      host: #enter url tied to your databricks workspace
+      root_path: /Workspace/Users/{username}/.bundle/${bundle.name}/test
+    permissions:
+      - user_name: #add username here
+        level: CAN_MANAGE
+    variables:
+      INSTANCE_POOL_ID: "0727-104344-hauls13-pool-uftxk0r6"
+      DLT_PIPELINE_ID: ""  # Add test pipeline ID here
+      GIT_BRANCH: "test"
+      #API_KEY: "{{secrets/lakehouse_iot_test_scope/api_key}}"
+      #DB_PASSWORD: "{{secrets/lakehouse_iot_test_scope/db_password}}"
+      #SNOWFLAKE_USER: "{{secrets/lakehouse_iot_test_scope/snowflake_user}}"
+      #SNOWFLAKE_PASSWORD: "{{secrets/lakehouse_iot_test_scope/snowflake_password}}"
+
+  prod:
+    mode: production
+    workspace:
+      host: #enter url tied to your databricks workspace
+      root_path: /Workspace/Users/{username}/.bundle/${bundle.name}/${bundle.target}
+    permissions:
+      - user_name: #add username here
+        level: CAN_MANAGE
+    variables:
+      INSTANCE_POOL_ID: "0727-104344-hauls13-pool-uftxk0r6"
+      DLT_PIPELINE_ID: ""  # Add prod pipeline ID here
+      GIT_BRANCH: "main"
+      #API_KEY: "{{secrets/lakehouse_iot_prod_scope/api_key}}"
+      #DB_PASSWORD: "{{secrets/lakehouse_iot_prod_scope/db_password}}"
+      #SNOWFLAKE_USER: "{{secrets/lakehouse_iot_prod_scope/snowflake_user}}"
+      #SNOWFLAKE_PASSWORD: "{{secrets/lakehouse_iot_prod_scope/snowflake_password}}"
